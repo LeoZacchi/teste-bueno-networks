@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->roles()->sync([$role]);
     }
+
+    public function hasRole($role)
+{
+    return $this->roles()->where('name', $role)->exists();
+}
 }

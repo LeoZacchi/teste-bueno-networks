@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
 use App\Notifications\NewUser;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -24,18 +25,22 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        try {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
         ]);
 
-        $user = User::create($validatedData);
-        $user->roles()->attach($request->input('role_id'));
+            $user = User::create($validatedData);
+            $user->roles()->attach($request->input('role_id'));
 
-        $user->notify(new NewUser($request->email, $request->password));
+            $user->notify(new NewUser($request->email, $request->password));
 
-        return redirect()->route('users.index')->with('success', 'Usuário criado com sucesso!');
+            return redirect()->route('users.index')->with('success', 'Usuário criado com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao criar usuário: ' . $e->getMessage());
+        }
     }
 
     public function edit($id)
@@ -51,22 +56,28 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
+        try {
         if (!$request->filled('password')) {
             $request->request->remove('password');
         } else {
+            $validatedData = $request->validate([
+                'password' => 'nullable|string|min:8',
+            ]);
             $request->merge(['password' => bcrypt($request->input('password'))]);
         }
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8',
         ]);
     
         $user->update($validatedData);
         $user->roles()->sync($request->input('role_id'));
 
         return redirect()->route('users.index')->with('success', 'Usuário atualizado com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao atualizar usuário: ' . $e->getMessage());
+        }
     }
 
     public function destroy($id)

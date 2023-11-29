@@ -2,11 +2,26 @@
 
 @section('content')
     <div class="container">
-        <h1>Lista de Usuários</h1>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Usuários</h1>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createUserModal">Novo Usuário</button>
+        </div>
 
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">Novo Usuário</button>
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
-        <table class="table">
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -58,7 +73,7 @@
                                             <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="password" class="form-label">Senha Atual</label>
+                                            <label for="password" class="form-label">Senha</label>
                                             <input type="password" class="form-control" id="password" name="password" placeholder="Digite uma nova senha se desejar">
                                             <small class="text-muted">Deixe em branco se não desejar alterar a senha.</small>
                                         </div>
@@ -72,7 +87,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                                            <button type="submit" class="btn btn-primary float-end">Salvar Alterações</button>
                                     </form>
                                 </div>
                             </div>
@@ -112,7 +127,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Criar Usuário</button>
+                            <button type="submit" class="btn btn-primary float-end">Criar Usuário</button>
                         </form>
                     </div>
                 </div>
