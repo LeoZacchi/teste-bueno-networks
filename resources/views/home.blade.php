@@ -55,7 +55,9 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Tela Inicial') }}</div>
+                <div class="card-header">
+                    <span class="fs-4">{{ __('Tela Inicial') }}</span>
+                </div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -64,7 +66,7 @@
                         </div>
                     @endif
 
-                    {{ __('Bem-vindo ao sistema!') }}
+                    <span class="fs-5">{{ __('Bem-vindo ao sistema!') }}</span>
                 </div>
             </div>
         </div>
