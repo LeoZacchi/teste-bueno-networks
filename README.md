@@ -7,60 +7,66 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## Desafio Fullstack - Gerenciamento de Usuário com notificação push e notificação por email
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+O sistema permite que administradores realizem operações como cadastro, edição, exclusão e visualização de usuários. Ao cadastrar um novo usuário, é enviado automaticamente um e-mail notificando sobre o cadastro bem-sucedido. Quando um administrador edita um usuário, este último recebe uma notificação imediata, caso esteja logado no sistema.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Instruções para Execução
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. Clone o projeto em sua máquina
 
-## Learning Laravel
+2. run `composer install` e `composer update`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Necessário `extension=sodium` habilitada no php.ini ou então rodar `composer install --ignore-platform-req=ext-sodium` e `composer update --ignore-platform-req=ext-sodium` para ignorar temporariamente essas extensões necessárias.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+3. run `npm install`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4. Crie um Arquivo `.env`: Na raiz do seu projeto, crie um arquivo chamado `.env`.
 
-## Laravel Sponsors
+5. Copie do `.env.example`: Localize o arquivo `.env.example` no seu projeto e copie todo o conteúdo.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+6. Cole no `.env`: Cole o conteúdo copiado no arquivo recém-criado `.env`.
 
-### Premium Partners
+7. Configuração de Envio de E-mails:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Para habilitar o envio de e-mails, utilizei o serviço Mailtrap. Siga os passos abaixo para configurar:
 
-## Contributing
+Crie uma conta no [Mailtrap](https://mailtrap.io/) se ainda não tiver uma.
+Após o login, crie um novo projeto para obter as credenciais necessárias.
+No projeto Mailtrap, vá até as configurações e copie as informações do servidor SMTP fornecidas.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+8. Configuração do .env para Mailtrap:
 
-## Code of Conduct
+Adicione as seguintes informações do Mailtrap ao seu arquivo .env:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
 
-## Security Vulnerabilities
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Certifique-se de substituir pelos valores fornecidos pelo Mailtrap.
 
-## License
+9. run `php artisan migrate`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+10. run `php artisan db:seed`
+
+Após executar `php artisan db:seed`, será criado um usuário administrador para acesso ao sistema com as seguintes credenciais:
+
+-   Email: teste@example.com
+-   Senha: 12345678
+
+11. run `php artisan key:generate`
+
+12. run `npm run dev` para atualizar o laravel-mix.
+
+13. run `php artisan serve` para iniciar o servidor.
+
+14. Acesse http://localhost:8000
+
+Para conduzir testes nas funcionalidades de notificação, acesso o sistema simultaneamente com dois usuários distintos em navegadores diferentes. Utilizo as credenciais de um usuário administrador para efetuar as edições necessárias. Uma característica notável desse processo é a exibição em tempo real da notificação para o usuário que teve seus dados alterados.
