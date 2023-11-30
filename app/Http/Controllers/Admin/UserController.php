@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
 use App\Notifications\NewUser;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 
 class UserController extends Controller
 {
@@ -63,16 +65,18 @@ class UserController extends Controller
             $validatedData = $request->validate([
                 'password' => 'nullable|string|min:8',
             ]);
-            $request->merge(['password' => bcrypt($request->input('password'))]);
+            $user->update(['password' => bcrypt($request->input('password'))]);
         }
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
         ]);
-    
+
         $user->update($validatedData);
         $user->roles()->sync($request->input('role_id'));
+
+        $this->sendFCMNotification($user);
 
         return redirect()->route('users.index')->with('success', 'Usuário atualizado com sucesso!');
         } catch (\Exception $e) {
@@ -88,5 +92,23 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'Usuário excluído com sucesso!');
+    }
+
+    private function sendFCMNotification(User $user)
+    {
+        $token = $user->device_token;
+
+        $factory = (new Factory)
+            ->withServiceAccount(base_path('laravel-eb094-firebase-adminsdk-32br1-f06094db8e.json'))
+            ->withDatabaseUri('https://laravel-eb094-default-rtdb.firebaseio.com/');
+
+        $messaging = $factory->createMessaging();
+
+        $message = CloudMessage::withTarget('token', $token)
+            ->withNotification(Notification::create('Usuário Atualizado', 'Seu usuário foi atualizado com sucesso.'));
+
+        $messaging->send($message);
+
+        return response()->json(['message' => 'Notificação enviada com sucesso']);
     }
 }
