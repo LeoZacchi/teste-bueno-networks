@@ -110,7 +110,7 @@ class UserController extends Controller
         $messaging = $factory->createMessaging();
 
         $message = CloudMessage::withTarget('token', $token)
-            ->withNotification(Notification::create('Usuário Atualizado', 'Seu usuário foi atualizado com sucesso.'));
+            ->withNotification(Notification::create('Usuário Atualizado', 'Seu usuário foi atualizado.'));
 
         $messaging->send($message);
 
