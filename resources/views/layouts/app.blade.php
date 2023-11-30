@@ -12,10 +12,12 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-w1Q5dAWvc6fMD2vFG2K0Y9maTefrg1sH+2VSCtmITiABlT0ztdewUdpmSEOHZZh1" crossorigin="anonymous">
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/app.js"></script>
+    <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
     <div id="app">
